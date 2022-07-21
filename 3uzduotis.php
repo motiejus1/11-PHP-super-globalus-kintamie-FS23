@@ -1,3 +1,5 @@
+
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,12 +15,22 @@
 slaptažodis - "123456". 
 Jei sugalvota kombinacija sutampa su tuo, kas įvesta į input laukelius, 
 išvedamas pranešimas - "prisijungėte sėkmingai", kitu atveju - "Įvesti duomenys neteisingi". -->
-<form method="POST" action="3uzduotis.php">
-    <input name="vardas" />
-    <input name="slaptazodis" type="password" />
-    <button name="patvirtinti" type="submit">Prisijungti</button>
-</form>
+
+<?php if( isset($_SESSION["arprisijunges"]) && $_SESSION["arprisijunges"] == "prsijunges") { ?>
+    <form method="POST" action="3uzduotis.php">
+        <button type="submit" name="atsijungti"> Atsijungti </button>
+    </form>
+<?php } else { ?>
+    <form method="POST" action="3uzduotis.php">
+        <input name="vardas" />
+        <input name="slaptazodis" type="password" />
+        <button name="patvirtinti" type="submit">Prisijungti</button>
+    </form>
+<?php } ?>
 <?php 
+
+
+    //narsykle atsimintu kad mes esame prisijunge
     $vardas = "admin";
     $slaptazodis = "123456";
 
@@ -28,7 +40,8 @@ išvedamas pranešimas - "prisijungėte sėkmingai", kitu atveju - "Įvesti duom
 
         if($input_vardas == $vardas && $input_slaptazodis == $slaptazodis ) {
             //echo "prisijungėte sėkmingai";
-            header("Location: manopaskyra.php");
+            $_SESSION["arprisijunges"] = "prsijunges";
+            //header("Location: manopaskyra.php");
             // nukreipimas i manopaskyra.php
         } else {
             //echo "Įvesti duomenys neteisingi";
@@ -38,6 +51,13 @@ išvedamas pranešimas - "prisijungėte sėkmingai", kitu atveju - "Įvesti duom
 
     }
 
+    if(isset($_POST["atsijungti"])) {
+        session_destroy();
+        header("Location: 3uzduotis.php");
+    }
+
 ?>    
+
+<?php  //echo $_SESSION["arprisijunges"]; ?>
 </body>
 </html>
